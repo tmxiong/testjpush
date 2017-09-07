@@ -16,4 +16,3 @@ import router from './router';
 
 
 AppRegistry.registerComponent('testjpush', () => router);
-// 7e050b3dd86db0b1c833d904

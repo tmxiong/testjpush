@@ -5,11 +5,6 @@ const data = [
         des:''
     },
     {
-        name:'福彩3D',
-        id:'fc3d',
-        des:''
-    },
-    {
         name:'北京PK10',
         id:'bjpk10',
         des:''
@@ -17,11 +12,6 @@ const data = [
     {
         name:'北京快乐8',
         id:'bjkl8',
-        des:''
-    },
-    {
-        name:'福彩3D',
-        id:'fc3d',
         des:''
     },
     {
