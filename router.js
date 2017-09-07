@@ -3,6 +3,9 @@ import MainPage from './views/mainPage';
 import DetailPagDe from './views/detailPage'
 
 const routers = StackNavigator({
+    App: {
+        screen: AppPage,
+    },
     Main: {
         screen: MainPage,
     },
