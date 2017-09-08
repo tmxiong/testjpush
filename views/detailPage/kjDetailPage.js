@@ -65,12 +65,22 @@ export default class kjDetailPage extends Component {
     renderItem({item, index}) {
         let codes = item.code.split(',');
         let codeView = [];
+        let codeStyle = styles.code;
+        let codeText = styles.codeText;
+
+        if(codes.length > 7 && codes.length <= 10) {
+            codeStyle = styles.code_7_10;
+        } else if(codes.length > 10){
+            codeStyle = styles.code_10;
+            codeText = styles.codeText_10;
+        }
+
         for (let i = 0; i < codes.length; i++) {
             codeView.push(
                 <View
                     key={'c' + i}
-                    style={styles.code}>
-                    <Text>{codes[i]}</Text>
+                    style={codeStyle}>
+                    <Text style={codeText}>{codes[i]}</Text>
                 </View>
             )
         }
@@ -137,12 +147,12 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     icon: {
-        width: cfn.picWidth(80),
-        height: cfn.picWidth(80),
+        width: cfn.picWidth(100),
+        height: cfn.picWidth(100),
         resizeMode: 'contain',
         position: 'absolute',
         left: cfn.picHeight(20),
-        top: cfn.picHeight(20)
+        top: cfn.picHeight(15)
     },
     issue_container: {
         flexDirection: 'row',
@@ -167,14 +177,48 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: cfn.picHeight(10)
     },
+    codeText: {
+        color:'#e22222',
+        fontSize:18,
+        fontWeight:'bold'
+    },
+    codeText_10: {
+        color:'#e22222',
+        fontSize:10,
+    },
     code: {
         width: cfn.picWidth(60),
         height: cfn.picWidth(60),
         borderRadius: cfn.picWidth(30),
-        backgroundColor: '#f89',
+        //backgroundColor: '#f89',
         alignItems: 'center',
+        borderWidth:1,
+        borderColor:'#e22222',
         justifyContent: 'center',
         marginRight: cfn.picWidth(20),
+    },
+    code_7_10: {
+        width: cfn.picWidth(50),
+        height: cfn.picWidth(50),
+        borderRadius: cfn.picWidth(25),
+        //backgroundColor: '#f89',
+        alignItems: 'center',
+        borderWidth:1,
+        borderColor:'#e22222',
+        justifyContent: 'center',
+        marginRight: cfn.picWidth(7),
+    },
+    code_10: {
+        width: cfn.picWidth(30),
+        height: cfn.picWidth(30),
+        borderRadius: cfn.picWidth(15),
+        //backgroundColor: '#f89',
+        alignItems: 'center',
+        borderWidth:1,
+        borderColor:'#e22222',
+        justifyContent: 'center',
+        marginRight: cfn.picWidth(7),
+        marginTop:cfn.picHeight(5)
     }
 
 });

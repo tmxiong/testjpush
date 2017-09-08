@@ -14,7 +14,16 @@ import cqssc from '../imgs/lotteryIcons/cqssc_icon.png';
 import lotterys from '../config/lotterys';
 import cfn from '../tools/commonFun'
 import NavBar from '../component/NavBar'
+import SearchModal from '../component/searchModal';
 export default class OrderPage extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state={
+            visible:false
+        }
+    }
+
     goToDetail(route,params) {
         this.props.navigation.navigate(route,params)
     }
@@ -29,22 +38,25 @@ export default class OrderPage extends Component {
     //列表的每一行
     renderItem({item,index}) {
         let width = (index+1)%2;
-        return (
-            <TouchableOpacity
-                key={index}
-                activeOpacity={0.8}
-                onPress={()=>this.goToDetail('Kaijiang',{
-                    id:item.id,
-                    icon:cqssc,
-                    title:item.name
-                })}
-                style={styles.itemContainer}>
-                <Image source={cqssc} style={styles.icon}/>
-                <Text style={[styles.text, styles.title_text]}>{item.name}</Text>
-                <Text style={[styles.text, styles.des_text]}>小伙豪中500万</Text>
-                <View style={[styles.right_border,{width:width}]}/>
-            </TouchableOpacity>
-        )
+
+            return (
+                <TouchableOpacity
+                    key={index}
+                    activeOpacity={0.8}
+                    onPress={()=>this.goToDetail('Kaijiang',{
+                        id:item.id,
+                        icon:item.icon,
+                        title:item.name
+                    })}
+                    style={styles.itemContainer}>
+                    <Image source={item.icon} style={styles.icon}/>
+                    <Text style={[styles.text, styles.title_text]}>{item.name}</Text>
+                    <Text style={[styles.text, styles.des_text]}>小伙豪中500万</Text>
+                    <View style={[styles.right_border,{width:width}]}/>
+                </TouchableOpacity>
+            )
+
+
     }
     //绘制列表的分割线
     renderItemSeparator(){
@@ -56,13 +68,29 @@ export default class OrderPage extends Component {
         alert(index)
     }
 
+    rightFn() {
+        this.setModalVisible(true);
+    }
+
+    setModalVisible(visible) {
+        this.setState({
+            visible:visible
+        })
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <NavBar
                 middleText="开奖大厅"
+                rightIcon={require('../imgs/search_icon.png')}
+                rightFn={this.rightFn.bind(this)}
                 leftIcon={null}
                 leftFn={this.props.navigation.goBack()}
+                />
+                <SearchModal
+                visible={this.state.visible}
+                closeModal={this.setModalVisible.bind(this,false)}
                 />
                 <FlatList
                     style={styles.flatListStyle}

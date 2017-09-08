@@ -67,14 +67,18 @@ export default class navBar extends PureComponent {
         let leftView = null;
         if(props.leftIcon != null){
             leftView = (
-                <TouchableOpacity style={[styles.content,{left:5,}]}
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={[styles.content,{left:5,}]}
                                   onPress={()=>props.leftFn()}>
                     <View style={[styles.content,{left:5}]}>
                         <Image style={[styles.ImageStyle,{alignSelf:'flex-start'}]} source={props.leftIcon}/>
                     </View>
                 </TouchableOpacity>);
         }else if(props.leftText != null){
-            leftView = (<TouchableOpacity style={[styles.content,{left:5}]}
+            leftView = (<TouchableOpacity
+                activeOpacity={0.8}
+                style={[styles.content,{left:5}]}
                                           onPress={()=>props.leftFn()}
             >
                 <Text style={[styles.TextStyle,{color:props.textColor},{alignSelf:'flex-start'}]}>{props.leftText}</Text>
@@ -88,7 +92,9 @@ export default class navBar extends PureComponent {
         let rightView = null;
         if(props.rightIcon != null){
             rightView = (
-                <TouchableOpacity style={[styles.content,{right:5,}]}
+                <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={[styles.content,{right:5,}]}
                                   onPress={()=>props.rightFn()}>
                     <View style={[styles.content,{right:5}]}>
                         <Image style={[styles.ImageStyle,{alignSelf:'flex-end'}]} source={props.rightIcon}/>
@@ -96,7 +102,9 @@ export default class navBar extends PureComponent {
                 </TouchableOpacity>
             )
         }else if(props.rightText != null){
-            rightView = (<TouchableOpacity style={[styles.content,{right:5,}]}
+            rightView = (<TouchableOpacity
+                activeOpacity={0.8}
+                style={[styles.content,{right:5,}]}
                                            onPress={()=>props.rightFn()}>
                 <Text style={[styles.TextStyle,{color:props.textColor},{alignSelf:'flex-end'}]}>{props.rightText}</Text>
             </TouchableOpacity>)
@@ -109,6 +117,7 @@ export default class navBar extends PureComponent {
         if(props.middleText != null){
             middle = (
                 <TouchableOpacity
+                    activeOpacity={0.8}
                     onPress={()=>props.middleFn()}>
                     <Text style={[styles.TextStyle,{color:props.textColor}]}>
                         {props.middleText}
