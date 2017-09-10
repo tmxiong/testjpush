@@ -1,6 +1,7 @@
 /**
  * Created by timxiong on 2017/9/6.
  */
+// SyntaxError: Unexpected token < in JSON at position 0
 import React, {Component} from 'react';
 import {
     AppRegistry,
@@ -11,9 +12,11 @@ import {
     Button,
     TouchableOpacity,
     StatusBar,
-    FlatList
+    FlatList,
+    RefreshControl
 } from 'react-native';
 import cfn from '../tools/commonFun';
+import Loading from '../component/loading'
 import NavBar from '../component/NavBar';
 const url_id = require('../config/urls').getUrlId();
 let {getArticleList} = require('../config/urls');
@@ -22,7 +25,13 @@ export default class HomePage extends Component {
         super(props);
         this.state={
             data:null,
-        }
+            isLoading:false,
+            isError: false,
+            isRefreshing:false,
+        };
+        this.data = [];
+        this.nowPage = 0;
+
     }
     static defaultProps={
 
@@ -30,22 +39,40 @@ export default class HomePage extends Component {
     _keyExtractor = (item, index) => item.docid;
 
     componentDidMount() {
-        this.getData();
+        this.getData(true,20,40);
     }
-    getData() {
-        let url = getArticleList(0,20);
-        fetch(url)
+
+    getData(isFirst, now, next) {
+        if(isFirst) {
+            this.setState({
+                isLoading:true,
+                isError:false,
+            });
+        }
+
+        let url = getArticleList(now, next);
+        fetch(url,{dataType : 'json' })
             .then((res)=>res.json())
             .then((data)=>this.setData(data))
             .catch((error)=>this.setError(error))
     }
 
     setError(error) {
+        this.setState({
+            isLoading:false,
+            isError:true,
+            isRefreshing:false,
+        });
         console.log(error);
     }
 
     setData(data) {
-        this.setState({data: data[url_id]});
+        this.setState({
+            data: this.data.concat(data[url_id]),
+            isLoading:false,
+            isError: false,
+            isRefreshing:false,
+        });
     }
 
     goToDetail(route,params) {
@@ -78,7 +105,19 @@ export default class HomePage extends Component {
         }
 
     }
-
+    _onRefresh() {
+        this.data = [];
+        this.nowPage = 0;
+        this.setState({
+            isRefreshing:true,
+        });
+        this.getData(false,0,20);
+    }
+    _onEndReached() {
+        this.nowPage ++;
+        this.getData(false, this.nowPage*20, this.nowPage*20 + 20);
+        alert('onEnd')
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -91,6 +130,24 @@ export default class HomePage extends Component {
                     data={this.state.data}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={this._keyExtractor}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                            tintColor="#000"
+                            title="正在努力加载..."
+                            titleColor="#000"
+                            colors={['#b22222']}
+                            progressBackgroundColor="#fff"
+                        />
+                    }
+                    onEndReached={this._onEndReached.bind(this)}
+                    onEndReachedThreshold={0.9}
+                />
+                <Loading
+                    isLoading={this.state.isLoading}
+                    isError={this.state.isError}
+                    reload={()=>this.getData(true,0,20)}
                 />
             </View>)
     }
@@ -102,6 +159,7 @@ const styles = StyleSheet.create({
     },
     flatListStyle: {
       width:cfn.deviceWidth(),
+        zIndex:999
     },
     item_container: {
       width:cfn.deviceWidth() - cfn.picWidth(40),
