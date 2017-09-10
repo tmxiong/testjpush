@@ -34,7 +34,7 @@ export default class kjDetailPage extends Component {
         this.lotteryIcon = this.props.navigation.state.params.icon
     }
 
-    _keyExtractor = (item, index) => item.id;
+    _keyExtractor = (item, index) => item.issue;
 
     componentDidMount() {
         this.getData();
@@ -88,9 +88,13 @@ export default class kjDetailPage extends Component {
             <View
                 key={'a' + index}
                 style={styles.item_container}>
-                <Image
-                    style={styles.icon}
-                    source={this.lotteryIcon}/>
+                <View style={styles.icon_container}>
+                    <Image
+                        style={styles.icon}
+                        source={this.lotteryIcon}/>
+                    <View style={styles.border_right}/>
+                </View>
+
                 <View style={styles.issue_container}>
                     <Text style={styles.issue_text}>第 {item.issue} 期</Text>
                     <Text style={styles.date_text}>{item.opendate}</Text>
@@ -146,21 +150,34 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignSelf: 'center'
     },
+    icon_container: {
+        width: cfn.picWidth(140),
+        height: cfn.picWidth(140),
+        alignItems:'center',
+        justifyContent:'center',
+        position: 'absolute',
+        left:0,
+        flexDirection:'row',
+    },
     icon: {
         width: cfn.picWidth(100),
         height: cfn.picWidth(100),
         resizeMode: 'contain',
+    },
+    border_right: {
+        backgroundColor:'#ddd',
+        width: 1,
+        height:cfn.picHeight(100),
         position: 'absolute',
-        left: cfn.picHeight(20),
-        top: cfn.picHeight(15)
+        right:0
     },
     issue_container: {
         flexDirection: 'row',
-        marginLeft: cfn.picWidth(140),
+        marginLeft: cfn.picWidth(160),
         alignItems: 'center'
     },
     issue_text: {
-        color: '#c00',
+        color: '#b22222',
         fontSize: 12
     },
     date_text: {
@@ -173,17 +190,17 @@ const styles = StyleSheet.create({
         height: cfn.picWidth(60),
         flexDirection: 'row',
         flexWrap: 'wrap',
-        marginLeft: cfn.picWidth(140),
+        marginLeft: cfn.picWidth(160),
         alignItems: 'center',
         marginTop: cfn.picHeight(10)
     },
     codeText: {
-        color:'#e22222',
+        color:'#b22222',
         fontSize:18,
         fontWeight:'bold'
     },
     codeText_10: {
-        color:'#e22222',
+        color:'#b22222',
         fontSize:10,
     },
     code: {
@@ -193,7 +210,7 @@ const styles = StyleSheet.create({
         //backgroundColor: '#f89',
         alignItems: 'center',
         borderWidth:1,
-        borderColor:'#e22222',
+        borderColor:'#b22222',
         justifyContent: 'center',
         marginRight: cfn.picWidth(20),
     },
@@ -204,7 +221,7 @@ const styles = StyleSheet.create({
         //backgroundColor: '#f89',
         alignItems: 'center',
         borderWidth:1,
-        borderColor:'#e22222',
+        borderColor:'#b22222',
         justifyContent: 'center',
         marginRight: cfn.picWidth(7),
     },
@@ -215,7 +232,7 @@ const styles = StyleSheet.create({
         //backgroundColor: '#f89',
         alignItems: 'center',
         borderWidth:1,
-        borderColor:'#e22222',
+        borderColor:'#b22222',
         justifyContent: 'center',
         marginRight: cfn.picWidth(7),
         marginTop:cfn.picHeight(5)

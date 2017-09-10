@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     flatListStyle: {
-
         width:cfn.deviceWidth(),
         height:cfn.deviceHeight(),
     },
