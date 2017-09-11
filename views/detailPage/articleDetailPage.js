@@ -14,15 +14,21 @@ import { NavigationActions } from 'react-navigation'
 import cfn from '../../tools/commonFun'
 import NavBar from '../../component/NavBar';
 const {getArticleDetail} = require('../../config/urls');
+import config from '../../config/config';
+import Loading from '../../component/loading'
 export default class articleDetailPage extends Component {
     static navigationOptions = {header: null};
 
     constructor(props) {
         super(props);
         this.docid = props.navigation.state.params.docid;
+        this.title = props.navigation.state.params.title;
+        this.mtime = props.navigation.state.params.mtime;
 
         this.state={
-            data:null
+            data:'',
+            isError:false,
+            isLoading: false,
         }
     }
     static defaultProps = {
@@ -37,23 +43,57 @@ export default class articleDetailPage extends Component {
         this.props.navigation.goBack();
     }
     getData() {
+
+        this.setState({
+            isError:false,
+            isLoading:true,
+        });
+
         let url = getArticleDetail(this.docid);
-        fetch(url)
+        fetch(url,{headers: {
+            'Accept':'*/*',
+            'Accept-Language':'zh-CN,zh;q=0.8',
+            'Connection':'keep-alive',
+            'Content-Type': 'application/json',
+            'Origin': 'http://c.m.163.com',
+            // 以下一条可防止出现403拒绝访问错误
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+        }})
             .then((res)=>res.json())
             .then((data)=>this.setData(data[this.docid]))
+            .catch((error)=>this.setError(error))
     }
+
+    setError(error) {
+        this.setState({
+            isError:true,
+            isLoading:false,
+        })
+    }
+
     setData(data) {
-        // let htmlTemp = '<!DOCTYPE html>'+
-        //     '<html lang="en">'+
-        //     '<head>'+
-        //     '<meta charset="UTF-8">'+
-        //     '<title></title>'+
-        //     '</head>'+
-        //     '<body>'+
-        //     data.body +
-        //     '</body>'+
-        //     '</html>';
-        this.setState({data:data.body})
+        let bodySting = data.body;
+        let imgs = data.img;
+        if(imgs.length > 0) {
+            for(let i = 0; i <imgs.length; i++){
+                // let imgPixel = imgs[i].pixel.split('*');
+                // let imgBili = imgPixel[1]/imgPixel[0]; //高除以宽;
+                //
+                // let imgWidth = cfn.deviceWidth()-cfn.picWidth(20);
+                // let imgHeight = imgWidth * imgBili;
+
+                //let imgTemp = `<img src="${imgs[i].src}" style="width:${imgWidth}px; height:${imgHeight}px">`;
+                let imgTemp = `<img src='${imgs[i].src}' style='display: block;'>`;
+                bodySting = bodySting.replace(imgs[i].ref,imgTemp);
+            }
+        }
+        bodySting = bodySting.replace('wangyicaipiao','');
+        bodySting = bodySting.replace('网易彩票',config.sourceName);
+        this.setState({
+            data:bodySting,
+            isError:false,
+            isLoading:true,
+        })
     }
     render() {
         let htmlTemp = `<!DOCTYPE html>\n
@@ -63,6 +103,8 @@ export default class articleDetailPage extends Component {
             <meta name="viewport" content="width=320, user-scalable=no">
             <title></title>
             </head>
+            <h3>${this.title}</h3>
+            <p>${this.mtime}</P>
             <body>
             ${this.state.data}
             </body>
@@ -73,9 +115,15 @@ export default class articleDetailPage extends Component {
             middleText="文章详情"
             leftFn={()=>this.goBack()}
             />
-            <Text>文章</Text>
+
             <WebView
-            source={{html: htmlTemp}}
+                style={styles.webView}
+                source={{html: htmlTemp}}
+            />
+            <Loading
+                isError={false}
+                isLoading={false}
+                reload={this.getData.bind(this)}
             />
         </View>)
     }
@@ -85,5 +133,8 @@ const styles = StyleSheet.create({
    container: {
        flex:1,
        justifyContent:'flex-start'
-   }
+   },
+    webView: {
+       // width:cfn.deviceWidth()
+    }
 });

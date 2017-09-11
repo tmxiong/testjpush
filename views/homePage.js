@@ -9,93 +9,111 @@ import {
     Text,
     View,
     Image,
-    Button,
     TouchableOpacity,
     StatusBar,
     FlatList,
-    RefreshControl
+    RefreshControl,
+    Animated
 } from 'react-native';
 import cfn from '../tools/commonFun';
 import Loading from '../component/loading'
 import NavBar from '../component/NavBar';
+import config from '../config/config'
 const url_id = require('../config/urls').getUrlId();
 let {getArticleList} = require('../config/urls');
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 export default class HomePage extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            data:null,
-            isLoading:false,
+        this.state = {
+            data: null,
+            isLoading: false,
             isError: false,
-            isRefreshing:false,
+            isRefreshing: false,
         };
         this.data = [];
         this.nowPage = 0;
 
     }
-    static defaultProps={
 
-    };
+    static defaultProps = {};
     _keyExtractor = (item, index) => item.docid;
 
     componentDidMount() {
-        this.getData(true,20,40);
+        // true 为首次加载
+        // false 为上拉加载
+        this.getData(true, 0, 20);
     }
 
     getData(isFirst, now, next) {
-        if(isFirst) {
+        if (isFirst) {
             this.setState({
-                isLoading:true,
-                isError:false,
+                isLoading: true,
+                isError: false,
             });
         }
 
         let url = getArticleList(now, next);
-        fetch(url,{dataType : 'json' })
+        fetch(url, {
+            headers: {
+                'Accept': '*/*',
+                'Accept-Language': 'zh-CN,zh;q=0.8',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json',
+                'Origin': 'http://c.m.163.com',
+                // 以下一条可防止出现403拒绝访问错误
+                'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
+            }
+        })
             .then((res)=>res.json())
             .then((data)=>this.setData(data))
             .catch((error)=>this.setError(error))
+
     }
 
     setError(error) {
         this.setState({
-            isLoading:false,
-            isError:true,
-            isRefreshing:false,
+            isLoading: false,
+            isError: true,
+            isRefreshing: false,
         });
-        console.log(error);
+        // console.log(error);
     }
 
     setData(data) {
+        this.data = this.data.concat(data[url_id]);
         this.setState({
-            data: this.data.concat(data[url_id]),
-            isLoading:false,
+            data: this.data,
+            isLoading: false,
             isError: false,
-            isRefreshing:false,
+            isRefreshing: false,
         });
     }
 
-    goToDetail(route,params) {
-        this.props.navigation.navigate(route,params);
+    goToDetail(route, params) {
+        this.props.navigation.navigate(route, params);
     }
 
-    renderItem({item, index}){
-        if(item.source == '网易彩票'){
+    renderItem({item, index}) {
+        if (item.source == '网易彩票' && !item.specialextra && !item.imgextra && !item.title.match('网易')) {
             return (
                 <TouchableOpacity
                     activeOpacity={0.8}
                     key={index}
-                    onPress={()=>this.goToDetail('Article',{
-                        docid:item.docid,
-                    })}
+                    onPress={()=>this.goToDetail('Article', {
+                            docid: item.docid,
+                            title: item.title,
+                            mtime: item.mtime,
+                        }
+                    )}
                     style={styles.item_container}>
                     <Image
                         style={styles.item_img}
-                        source={{uri:item.imgsrc}}/>
+                        source={{uri: item.imgsrc}}/>
                     <View style={styles.item_text_container}>
                         <Text
                             style={styles.item_title}>{item.title}</Text>
-                        <Text style={styles.item_source}>132彩票</Text>
+                        <Text style={styles.item_source}>{config.sourceName}</Text>
                         <Text style={styles.item_time}>{item.mtime}</Text>
                     </View>
                 </TouchableOpacity>
@@ -105,19 +123,22 @@ export default class HomePage extends Component {
         }
 
     }
+
     _onRefresh() {
         this.data = [];
         this.nowPage = 0;
         this.setState({
-            isRefreshing:true,
+            isRefreshing: true,
         });
-        this.getData(false,0,20);
+        this.getData(false, 0, 20);
     }
+
     _onEndReached() {
-        this.nowPage ++;
-        this.getData(false, this.nowPage*20, this.nowPage*20 + 20);
-        alert('onEnd')
+        this.nowPage++;
+        this.getData(false, this.nowPage * 20, this.nowPage * 20 + 20);
+        //alert(this.nowPage)
     }
+
     render() {
         return (
             <View style={styles.container}>
@@ -125,11 +146,16 @@ export default class HomePage extends Component {
                     middleText="购彩资讯"
                     leftIcon={null}
                 />
-                <FlatList
+                <AnimatedFlatList
                     style={styles.flatListStyle}
                     data={this.state.data}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={this._keyExtractor}
+                    getItemLayout={(data, index) => ( {
+                        length: cfn.picHeight(160),
+                        offset: cfn.picHeight(160) * index,
+                        index
+                    } )}
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isRefreshing}
@@ -142,12 +168,12 @@ export default class HomePage extends Component {
                         />
                     }
                     onEndReached={this._onEndReached.bind(this)}
-                    onEndReachedThreshold={0.9}
+                    //onEndReachedThreshold={0.8}
                 />
                 <Loading
                     isLoading={this.state.isLoading}
                     isError={this.state.isError}
-                    reload={()=>this.getData(true,0,20)}
+                    reload={()=>this.getData(true, 20, 40)}
                 />
             </View>)
     }
@@ -158,44 +184,44 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     flatListStyle: {
-      width:cfn.deviceWidth(),
-        zIndex:999
+        width: cfn.deviceWidth(),
+        zIndex: 999
     },
     item_container: {
-      width:cfn.deviceWidth() - cfn.picWidth(40),
-        height:cfn.picHeight(160),
-        flexDirection:'row',
-        borderBottomWidth:1,
-        borderBottomColor:'#ddd',
-        alignItems:'center',
-        alignSelf:'center'
+        width: cfn.deviceWidth() - cfn.picWidth(40),
+        height: cfn.picHeight(160),
+        flexDirection: 'row',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+        alignItems: 'center',
+        alignSelf: 'center'
     },
     item_text_container: {
-        flexWrap:'wrap',
-        width:cfn.deviceWidth()-cfn.picWidth(180+40),
-        paddingLeft:cfn.picWidth(20),
-        height:cfn.picHeight(120),
+        flexWrap: 'wrap',
+        width: cfn.deviceWidth() - cfn.picWidth(180 + 40),
+        paddingLeft: cfn.picWidth(20),
+        height: cfn.picHeight(120),
     },
     item_source: {
-        fontSize:13,
-        color:'#888',
-        position:'absolute',
-        left:cfn.picWidth(20),
-        bottom:0
+        fontSize: 13,
+        color: '#888',
+        position: 'absolute',
+        left: cfn.picWidth(20),
+        bottom: 0
     },
     item_time: {
-        fontSize:13,
-        color:'#888',
-        position:'absolute',
-        right:cfn.picWidth(20),
-        bottom:0
+        fontSize: 13,
+        color: '#888',
+        position: 'absolute',
+        right: cfn.picWidth(20),
+        bottom: 0
     },
     item_title: {
-        color:'#444'
+        color: '#444'
     },
     item_img: {
-        width:cfn.picWidth(180),
-        height:cfn.picHeight(120),
+        width: cfn.picWidth(180),
+        height: cfn.picHeight(120),
     }
 
 });
