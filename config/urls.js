@@ -13,3 +13,9 @@ exports.getArticleList = function (now,next) {
 exports.getArticleDetail = function (docid) {
   return 'http://c.m.163.com/nc/article/' + docid + '/full.html'
 };
+
+// 福彩3d/高频彩/数字彩的链接
+exports.getPlayTips = function (type) {
+    // type = fc/gpc/szc/csxw
+    return 'https://m.qmcai.com/zixun/detail.html?_id=19264&sourceFrom=zixunrevision&categoryId='+ type +'&newWebview=true&backH5Control=true&h5ControlTitle=true&clientLogin=true&version=5.2.16&channel=970'
+};
