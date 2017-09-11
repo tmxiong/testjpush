@@ -16,6 +16,7 @@ import NavBar from '../../component/NavBar';
 const {getArticleDetail} = require('../../config/urls');
 import config from '../../config/config';
 import Loading from '../../component/loading'
+import fetchp from '../../tools/fetch-polyfill';
 export default class articleDetailPage extends Component {
     static navigationOptions = {header: null};
 
@@ -50,7 +51,7 @@ export default class articleDetailPage extends Component {
         });
 
         let url = getArticleDetail(this.docid);
-        fetch(url,{headers: {
+        fetchp(url,{headers: {
             'Accept':'*/*',
             'Accept-Language':'zh-CN,zh;q=0.8',
             'Connection':'keep-alive',
@@ -58,7 +59,7 @@ export default class articleDetailPage extends Component {
             'Origin': 'http://c.m.163.com',
             // 以下一条可防止出现403拒绝访问错误
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
-        }})
+        }},{timeout:10*1000})
             .then((res)=>res.json())
             .then((data)=>this.setData(data[this.docid]))
             .catch((error)=>this.setError(error))
@@ -83,7 +84,7 @@ export default class articleDetailPage extends Component {
                 // let imgHeight = imgWidth * imgBili;
 
                 //let imgTemp = `<img src="${imgs[i].src}" style="width:${imgWidth}px; height:${imgHeight}px">`;
-                let imgTemp = `<img src='${imgs[i].src}' style='display: block;'>`;
+                let imgTemp = `<img src='${imgs[i].src}' style='display: block;max-width: ${cfn.deviceWidth()-cfn.picWidth(100)}px'>`;
                 bodySting = bodySting.replace(imgs[i].ref,imgTemp);
             }
         }
@@ -92,7 +93,7 @@ export default class articleDetailPage extends Component {
         this.setState({
             data:bodySting,
             isError:false,
-            isLoading:true,
+            isLoading:false,
         })
     }
     render() {
@@ -105,7 +106,7 @@ export default class articleDetailPage extends Component {
             </head>
             <h3>${this.title}</h3>
             <p>${this.mtime}</P>
-            <body>
+            <body style="width:${cfn.deviceWidth()-cfn.picWidth(100)}px">
             ${this.state.data}
             </body>
             </html>`;
@@ -119,10 +120,11 @@ export default class articleDetailPage extends Component {
             <WebView
                 style={styles.webView}
                 source={{html: htmlTemp}}
+                scalesPageToFit={false}
             />
             <Loading
-                isError={false}
-                isLoading={false}
+                isError={this.state.isError}
+                isLoading={this.state.isLoading}
                 reload={this.getData.bind(this)}
             />
         </View>)
@@ -131,10 +133,11 @@ export default class articleDetailPage extends Component {
 
 const styles = StyleSheet.create({
    container: {
-       flex:1,
-       justifyContent:'flex-start'
+       justifyContent:'flex-start',
+       width:cfn.deviceWidth(),
+       height:cfn.deviceHeight(),
    },
     webView: {
-       // width:cfn.deviceWidth()
+       width:cfn.deviceWidth()
     }
 });

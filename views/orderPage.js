@@ -51,7 +51,7 @@ export default class OrderPage extends Component {
                     style={styles.itemContainer}>
                     <Image source={item.icon} style={styles.icon}/>
                     <Text style={[styles.text, styles.title_text]}>{item.name}</Text>
-                    <Text style={[styles.text, styles.des_text]}>小伙豪中500万</Text>
+                    <Text style={[styles.text, styles.des_text]}>{item.des}</Text>
                     <View style={[styles.right_border,{width:width}]}/>
                 </TouchableOpacity>
             )

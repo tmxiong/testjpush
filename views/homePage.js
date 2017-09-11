@@ -13,7 +13,8 @@ import {
     StatusBar,
     FlatList,
     RefreshControl,
-    Animated
+    Animated,
+    ScrollView
 } from 'react-native';
 import cfn from '../tools/commonFun';
 import Loading from '../component/loading'
@@ -22,6 +23,7 @@ import config from '../config/config'
 const url_id = require('../config/urls').getUrlId();
 let {getArticleList} = require('../config/urls');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+import Banner from '../component/Banner';
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
@@ -100,7 +102,7 @@ export default class HomePage extends Component {
                 <TouchableOpacity
                     activeOpacity={0.8}
                     key={index}
-                    onPress={()=>this.goToDetail('Article', {
+                    onPress={()=>this.goToDetail('newsDetail', {
                             docid: item.docid,
                             title: item.title,
                             mtime: item.mtime,
@@ -141,11 +143,60 @@ export default class HomePage extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <NavBar
-                    middleText="购彩资讯"
-                    leftIcon={null}
+            <ScrollView
+                style={styles.container}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.isRefreshing}
+                        onRefresh={this._onRefresh.bind(this)}
+                        tintColor="#000"
+                        title="正在努力加载..."
+                        titleColor="#000"
+                        colors={['#b22222']}
+                        progressBackgroundColor="#fff"
+                    />
+                }
+            >
+                {/*<NavBar*/}
+                    {/*middleText="购彩资讯"*/}
+                    {/*leftIcon={null}*/}
+                {/*/>*/}
+                <Banner
+                    bannerList={[
+                        require('../imgs/banner/banner_01.jpg'),
+                        require('../imgs/banner/banner_03.jpg'),
+                        require('../imgs/banner/banner_02.jpg'),]}
                 />
+                <View style={styles.cp_btn_container}>
+                    <TouchableOpacity
+                        onPress={()=>this.goToDetail('PlayTips',{
+                            type:'fc',
+                            name:'福彩3D推荐'
+                        })}
+                        style={styles.cp_btn}>
+                        <Text>福彩3D</Text>
+                    </TouchableOpacity>
+                    <View style={styles.border_right}/>
+                    <TouchableOpacity
+                        onPress={()=>this.goToDetail('PlayTips',{
+                            type:'szc',
+                            name:'数字彩推荐'
+                        })}
+                        style={styles.cp_btn}>
+                        <Text>数字彩</Text>
+                    </TouchableOpacity>
+                    <View style={styles.border_right}/>
+                    <TouchableOpacity
+                        onPress={()=>this.goToDetail('PlayTips',{
+                            type:'gpc',
+                            name:'高频彩推荐'
+                        })}
+                        style={styles.cp_btn}>
+                        <Text>高频彩</Text>
+                    </TouchableOpacity>
+                    <View style={styles.border_right}/>
+                </View>
+
                 <AnimatedFlatList
                     style={styles.flatListStyle}
                     data={this.state.data}
@@ -156,45 +207,66 @@ export default class HomePage extends Component {
                         offset: cfn.picHeight(160) * index,
                         index
                     } )}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.isRefreshing}
-                            onRefresh={this._onRefresh.bind(this)}
-                            tintColor="#000"
-                            title="正在努力加载..."
-                            titleColor="#000"
-                            colors={['#b22222']}
-                            progressBackgroundColor="#fff"
-                        />
-                    }
-                    onEndReached={this._onEndReached.bind(this)}
+
+                    //onEndReached={this._onEndReached.bind(this)}
                     //onEndReachedThreshold={0.8}
                 />
+                <TouchableOpacity
+                    activeOpacity={1}
+                    style={{width:cfn.deviceWidth(), alignItems:'flex-end',
+                        height:cfn.picHeight(70),backgroundColor:'#fff',justifyContent:'center'}}
+                >
+                    <Text style={{color:'#444',fontSize:11,marginRight:10}}>点击查看更多>></Text>
+                </TouchableOpacity>
                 <Loading
                     isLoading={this.state.isLoading}
                     isError={this.state.isError}
                     reload={()=>this.getData(true, 20, 40)}
                 />
-            </View>)
+            </ScrollView>)
     }
 }
 const styles = StyleSheet.create({
     container: {
-        justifyContent: 'flex-start',
-        alignItems: 'center',
+        // justifyContent: 'flex-start',
+        // alignItems: 'center',
+    },
+    cp_btn_container: {
+        width:cfn.deviceWidth(),
+        height:cfn.picHeight(130),
+        flexDirection:'row',
+        borderBottomColor:'#ddd',
+        borderBottomWidth:1,
+        alignItems:'center',
+        backgroundColor:'#fff'
+    },
+    border_right: {
+        width:1,
+        height:cfn.picHeight(80),
+        backgroundColor:'#ddd'
+    },
+    cp_btn: {
+        width:cfn.deviceWidth() / 3  ,
+        height:cfn.picHeight(130),
+        alignItems:'center',
+        justifyContent:'center'
     },
     flatListStyle: {
         width: cfn.deviceWidth(),
-        zIndex: 999
+        zIndex: 999,
+        borderTopColor:'#ddd',
+        borderTopWidth:1,
+        marginTop:cfn.picHeight(20),
     },
     item_container: {
-        width: cfn.deviceWidth() - cfn.picWidth(40),
+        width: cfn.deviceWidth(),
         height: cfn.picHeight(160),
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderBottomColor: '#ddd',
         alignItems: 'center',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        backgroundColor:'#fff'
     },
     item_text_container: {
         flexWrap: 'wrap',
@@ -222,6 +294,7 @@ const styles = StyleSheet.create({
     item_img: {
         width: cfn.picWidth(180),
         height: cfn.picHeight(120),
+        marginLeft: cfn.picWidth(20),
     }
 
 });
