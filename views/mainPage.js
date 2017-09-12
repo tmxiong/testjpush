@@ -26,8 +26,8 @@ const mainPage = TabNavigator({
     Home: {
         screen: HomePage,
         navigationOptions: {
-            title: '购彩技巧',
-            tabBarLabel: '购彩技巧',
+            title: '购彩攻略',
+            tabBarLabel: '购彩攻略',
             tabBarIcon: ({ tintColor }) => (
                 <Image
                     source={require('../imgs/home_icon.png')}
@@ -60,8 +60,8 @@ const mainPage = TabNavigator({
         screen: MinePage,
         //以下参数也可放置在MinePage.js页面
         navigationOptions: {
-            title: '我的',
-            tabBarLabel: '我的',
+            title: '更多',
+            tabBarLabel: '更多',
             tabBarIcon: ({ tintColor }) => (
                 <Image
                     source={require('../imgs/mine_icon.png')}

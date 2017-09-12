@@ -193,26 +193,7 @@ const styles = StyleSheet.create({
         // justifyContent: 'flex-start',
         // alignItems: 'center',
     },
-    cp_btn_container: {
-        width:cfn.deviceWidth(),
-        height:cfn.picHeight(130),
-        flexDirection:'row',
-        borderBottomColor:'#ddd',
-        borderBottomWidth:1,
-        alignItems:'center',
-        backgroundColor:'#fff'
-    },
-    border_right: {
-        width:1,
-        height:cfn.picHeight(80),
-        backgroundColor:'#ddd'
-    },
-    cp_btn: {
-        width:cfn.deviceWidth() / 3  ,
-        height:cfn.picHeight(130),
-        alignItems:'center',
-        justifyContent:'center'
-    },
+
     flatListStyle: {
         width: cfn.deviceWidth(),
         zIndex: 999,
