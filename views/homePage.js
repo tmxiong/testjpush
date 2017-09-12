@@ -142,25 +142,15 @@ export default class HomePage extends Component {
 
     render() {
         return (
-            <View>
-                <NavBar
-                    middleText="购彩攻略"
-                    leftIcon={null}
-                />
-
-                <ScrollView
+            <View style={{height:cfn.deviceHeight()}}>
+                {/*<NavBar*/}
+                    {/*middleText="购彩攻略"*/}
+                    {/*leftIcon={null}*/}
+                {/*/>*/}
+                <View style={{height:cfn.picHeight(50),backgroundColor:'#b22222'}}/>
+                <View
                     style={styles.container}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.isRefreshing}
-                            onRefresh={this._onRefresh.bind(this)}
-                            tintColor="#000"
-                            title="正在努力加载..."
-                            titleColor="#000"
-                            colors={['#b22222']}
-                            progressBackgroundColor="#fff"
-                        />
-                    }
+
                 >
                     <Banner
                         bannerList={[
@@ -266,6 +256,17 @@ export default class HomePage extends Component {
                             offset: cfn.picHeight(160) * index,
                             index
                         } )}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.isRefreshing}
+                                onRefresh={this._onRefresh.bind(this)}
+                                tintColor="#000"
+                                title="正在努力加载..."
+                                titleColor="#000"
+                                colors={['#b22222']}
+                                progressBackgroundColor="#fff"
+                            />
+                        }
 
                         //onEndReached={this._onEndReached.bind(this)}
                         //onEndReachedThreshold={0.8}
@@ -275,14 +276,14 @@ export default class HomePage extends Component {
                         isError={this.state.isError}
                         reload={()=>this.getData(true, 0, 10)}
                     />
-                </ScrollView>
+                </View>
             </View>)
     }
 }
 const styles = StyleSheet.create({
     container: {
-        // justifyContent: 'flex-start',
-        // alignItems: 'center',
+        height:cfn.deviceHeight(),
+        width:cfn.deviceWidth()
     },
     cp_btn_container: {
         width: cfn.deviceWidth(),
@@ -315,10 +316,11 @@ const styles = StyleSheet.create({
     },
     flatListStyle: {
         width: cfn.deviceWidth(),
-        height: cfn.deviceHeight()+cfn.picHeight(260),
+        //height: cfn.deviceHeight(),
         zIndex: 999,
         borderTopColor: '#ddd',
         borderTopWidth: 1,
+        paddingBottom:cfn.picHeight(20)
     },
     item_container: {
         width: cfn.deviceWidth(),
