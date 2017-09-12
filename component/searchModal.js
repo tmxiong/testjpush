@@ -142,8 +142,8 @@ export default class searchModal extends PureComponent {
                         borderColor:'#b22222',
                         alignItems:'center',
                         justifyContent:'center',
-                        marginTop:cfn.picWidth(20),
-                        marginRight:cfn.picWidth(10)
+                        marginRight:cfn.picWidth(10),
+                        marginTop:cfn.picHeight(10)
                     }}
                 >
                     <Text style={{fontSize:20, color:'#b22222'}}>{codes[i]}</Text>
@@ -154,21 +154,38 @@ export default class searchModal extends PureComponent {
             codeView: (<View style={styles.result_container}>
                 <View style={{
                     flexDirection:'row',alignItems:'center',
+                    borderBottomColor:'#ddd',
+                    borderBottomWidth:1,
+                    justifyContent:'center',
+                    height:cfn.picHeight(90),
+                    width:cfn.deviceWidth()-cfn.picWidth(40)
 
                 }}>
                     <Image style={{
-                        width:cfn.picWidth(80),
-                        height:cfn.picWidth(80),
+                        width:cfn.picWidth(70),
+                        height:cfn.picWidth(70),
                         resizeMode:'contain',
+                        alignSelf:'center'
                     }} source={require('../imgs/lotteryIcons/cqssc.png')}/>
                     <Text style={{
                         fontSize:20,
-                        marginLeft:cfn.picWidth(20)
+                        marginLeft:cfn.picWidth(20),
+                        alignSelf:'center'
                     }}>{this.state.name}</Text>
                 </View>
-                <Text style={{marginTop:cfn.picHeight(20)}}>{data[0].opendate}</Text>
-                <Text style={{marginTop:cfn.picHeight(20)}}>第 {data[0].issue} 期</Text>
-                <View style={{flexDirection:"row",flexWrap:'wrap'}}>
+                <View style={{height:cfn.picHeight(70),
+                    alignItems:'center',justifyContent:'center',
+                    width:cfn.deviceWidth()-cfn.picWidth(40),
+                    flexDirection:'row',borderBottomColor:'#ddd',
+                    borderBottomWidth:1,}}>
+                    <Text style={{color:'#888'}}>{data[0].opendate}</Text>
+                    <Text style={{color:'#888',marginLeft:cfn.picWidth(20)}}>第 {data[0].issue} 期</Text>
+                </View>
+
+                <View style={{flexDirection:"row",paddingTop:cfn.picHeight(20),
+                    paddingBottom:cfn.picHeight(20),
+                    alignItems:'center',justifyContent:'center',
+                    flexWrap:'wrap',width:cfn.deviceWidth()-cfn.picWidth(40)}}>
                     {issueView}
                 </View>
             </View>)
@@ -301,10 +318,13 @@ const styles = StyleSheet.create({
     },
     result_container: {
         width:cfn.deviceWidth()-cfn.picWidth(40),
-        padding:cfn.picWidth(20),
+        minHeight:cfn.picHeight(480),
         marginTop:cfn.picHeight(150),
         borderTopColor:'#ddd',
         borderTopWidth:1,
-        flexWrap:'wrap'
+        flexWrap:'wrap',
+        borderColor:'#ddd',
+        borderWidth:1,
+        borderRadius:7
     }
 });

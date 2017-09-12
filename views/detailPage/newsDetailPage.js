@@ -84,12 +84,13 @@ export default class articleDetailPage extends Component {
                 // let imgHeight = imgWidth * imgBili;
 
                 //let imgTemp = `<img src="${imgs[i].src}" style="width:${imgWidth}px; height:${imgHeight}px">`;
-                let imgTemp = `<img src='${imgs[i].src}' style='display: block;max-width: ${cfn.deviceWidth()-cfn.picWidth(100)}px'>`;
+                let imgTemp = `<img src='${imgs[i].src}' style='display: block;max-width: ${cfn.deviceWidth()-cfn.picWidth(40)}px'>`;
                 bodySting = bodySting.replace(imgs[i].ref,imgTemp);
             }
         }
         bodySting = bodySting.replace('wangyicaipiao','');
         bodySting = bodySting.replace('网易彩票',config.sourceName);
+        bodySting = bodySting.replace('【网易彩票】',config.sourceName);
         this.setState({
             data:bodySting,
             isError:false,
@@ -106,7 +107,7 @@ export default class articleDetailPage extends Component {
             </head>
             <h3>${this.title}</h3>
             <p>${this.mtime}</P>
-            <body style="width:${cfn.deviceWidth()-cfn.picWidth(100)}px">
+            <body style="max-width:${cfn.deviceWidth()-cfn.picWidth(40)}px">
             ${this.state.data}
             </body>
             </html>`;
@@ -138,6 +139,6 @@ const styles = StyleSheet.create({
        height:cfn.deviceHeight(),
    },
     webView: {
-       width:cfn.deviceWidth()
+       width:cfn.deviceWidth(),
     }
 });
