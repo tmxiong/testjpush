@@ -26,8 +26,8 @@ const mainPage = TabNavigator({
     Home: {
         screen: HomePage,
         navigationOptions: {
-            title: '购彩资讯',
-            tabBarLabel: '购彩资讯',
+            title: '购彩技巧',
+            tabBarLabel: '购彩技巧',
             tabBarIcon: ({ tintColor }) => (
                 <Image
                     source={require('../imgs/home_icon.png')}

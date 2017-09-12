@@ -14,7 +14,6 @@ import {
     FlatList,
     RefreshControl,
     Animated,
-    ScrollView
 } from 'react-native';
 import cfn from '../tools/commonFun';
 import Loading from '../component/loading'
@@ -23,9 +22,9 @@ import config from '../config/config'
 const url_id = require('../config/urls').getUrlId();
 let {getArticleList} = require('../config/urls');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
-import Banner from '../component/Banner';
 import fetchp from '../tools/fetch-polyfill'
-export default class HomePage extends Component {
+export default class moreArticle extends Component {
+    static navigationOptions = {header: null};
     constructor(props) {
         super(props);
         this.state = {
@@ -35,6 +34,7 @@ export default class HomePage extends Component {
             isRefreshing: false,
         };
         this.nowPage = 0;
+        this.data = [];
 
     }
 
@@ -44,7 +44,7 @@ export default class HomePage extends Component {
     componentDidMount() {
         // true 为首次加载
         // false 为上拉加载
-        this.getData(true, 0, 10);
+        this.getData(true, 0, 20);
     }
 
     getData(isFirst, now, next) {
@@ -83,8 +83,9 @@ export default class HomePage extends Component {
     }
 
     setData(data) {
+        this.data = this.data.concat(data[url_id]);
         this.setState({
-            data: data[url_id],
+            data: this.data,
             isLoading: false,
             isError: false,
             isRefreshing: false,
@@ -131,7 +132,7 @@ export default class HomePage extends Component {
         this.setState({
             isRefreshing: true,
         });
-        this.getData(false, 0, 10);
+        this.getData(false, 0, 20);
     }
 
     _onEndReached() {
@@ -140,103 +141,51 @@ export default class HomePage extends Component {
         //alert(this.nowPage)
     }
 
+    goBack() {
+        this.props.navigation.goBack();
+    }
+
     render() {
         return (
-            <ScrollView
+            <View
                 style={styles.container}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.isRefreshing}
-                        onRefresh={this._onRefresh.bind(this)}
-                        tintColor="#000"
-                        title="正在努力加载..."
-                        titleColor="#000"
-                        colors={['#b22222']}
-                        progressBackgroundColor="#fff"
-                    />
-                }
+
             >
                 <NavBar
-                    middleText="购彩技巧"
-                    leftIcon={null}
+                    middleText="更多资讯"
+                    leftFn = {this.goBack.bind(this)}
                 />
-                <Banner
-                    bannerList={[
-                        require('../imgs/banner/banner_01.jpg'),
-                        require('../imgs/banner/banner_03.jpg'),
-                        require('../imgs/banner/banner_02.jpg'),]}
-                />
-                <View style={styles.cp_btn_container}>
-                    <TouchableOpacity
-                        onPress={()=>this.goToDetail('PlayTips',{
-                            type:'fc',
-                            name:'福彩3D推荐'
-                        })}
-                        style={styles.cp_btn}>
-                        <Text>福彩3D</Text>
-                    </TouchableOpacity>
-                    <View style={styles.border_right}/>
-                    <TouchableOpacity
-                        onPress={()=>this.goToDetail('PlayTips',{
-                            type:'szc',
-                            name:'数字彩推荐'
-                        })}
-                        style={styles.cp_btn}>
-                        <Text>数字彩</Text>
-                    </TouchableOpacity>
-                    <View style={styles.border_right}/>
-                    <TouchableOpacity
-                        onPress={()=>this.goToDetail('PlayTips',{
-                            type:'gpc',
-                            name:'高频彩推荐'
-                        })}
-                        style={styles.cp_btn}>
-                        <Text>高频彩</Text>
-                    </TouchableOpacity>
-                    <View style={styles.border_right}/>
-                </View>
-
-                {this.state.data ?
-                    <View
-                        style={{width:cfn.deviceWidth(), alignItems:'flex-end', marginTop:cfn.picHeight(20),
-                        height:cfn.picHeight(80),backgroundColor:'#fff',justifyContent:'center'}}
-                >
-                    <View style={{position:'absolute',left:cfn.picWidth(20),
-                        borderLeftColor:'#b22222',
-                        borderLeftWidth:cfn.picWidth(5)}}>
-                        <Text style={{marginLeft:cfn.picWidth(10),color:'#333'}}>
-                            购彩资讯
-                        </Text>
-                    </View>
-
-                    <TouchableOpacity
-                        onPress={()=>this.goToDetail('MoreArticle')}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={{color:'#666',fontSize:11,marginRight:10}}>查看更多>></Text>
-                    </TouchableOpacity>
-
-                </View> : null}
                 <AnimatedFlatList
                     style={styles.flatListStyle}
                     data={this.state.data}
                     renderItem={this.renderItem.bind(this)}
                     keyExtractor={this._keyExtractor}
-                    getItemLayout={(data, index) => ( {
-                        length: cfn.picHeight(160),
-                        offset: cfn.picHeight(160) * index,
-                        index
-                    } )}
+                    //getItemLayout={(data, index) => ( {
+                    //    length: cfn.picHeight(160),
+                    //    offset: cfn.picHeight(160) * index,
+                    //    index
+                    //} )}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={this._onRefresh.bind(this)}
+                            tintColor="#000"
+                            title="正在努力加载..."
+                            titleColor="#000"
+                            colors={['#b22222']}
+                            progressBackgroundColor="#fff"
+                        />
+                    }
 
-                    //onEndReached={this._onEndReached.bind(this)}
+                    onEndReached={this._onEndReached.bind(this)}
                     //onEndReachedThreshold={0.8}
                 />
                 <Loading
                     isLoading={this.state.isLoading}
                     isError={this.state.isError}
-                    reload={()=>this.getData(true, 0, 10)}
+                    reload={()=>this.getData(true, 0, 20)}
                 />
-            </ScrollView>)
+            </View>)
     }
 }
 const styles = StyleSheet.create({
