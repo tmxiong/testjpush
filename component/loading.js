@@ -26,7 +26,7 @@ export default class loadingModal extends PureComponent {
     constructor(props) {
         super(props);
         this.loading = '正在拼命加载...';
-        this.error = '网络错误，点击重试';
+        this.error = '加载失败，点击重试';
         this.state = {
             isLoading: false,
             isError: false
