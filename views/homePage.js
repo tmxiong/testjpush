@@ -21,6 +21,7 @@ import Loading from '../component/loading'
 import NavBar from '../component/NavBar';
 import config from '../config/config'
 const url_id = require('../config/urls').getUrlId();
+import Welcome from '../component/welcome';
 let {getArticleList} = require('../config/urls');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 import Banner from '../component/Banner';
