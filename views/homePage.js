@@ -21,7 +21,7 @@ import Loading from '../component/loading'
 import NavBar from '../component/NavBar';
 import config from '../config/config'
 const url_id = require('../config/urls').getUrlId();
-import Welcome from '../component/welcome';
+import Welcome from './welcomePage';
 let {getArticleList} = require('../config/urls');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 import Banner from '../component/Banner';
@@ -148,7 +148,7 @@ export default class HomePage extends Component {
                     {/*middleText="购彩攻略"*/}
                     {/*leftIcon={null}*/}
                 {/*/>*/}
-                <View style={{height:cfn.picHeight(50),backgroundColor:'#b22222'}}/>
+                {/*<View style={{height:cfn.picHeight(50),position:'absolute',top:0,zIndex:99,backgroundColor:'rgba(0,0,0,0.5)'}}/>*/}
                 <View
                     style={styles.container}
 
@@ -272,6 +272,7 @@ export default class HomePage extends Component {
                         //onEndReached={this._onEndReached.bind(this)}
                         //onEndReachedThreshold={0.8}
                     />
+                    <View style={{height:cfn.picHeight(109)}}/>
                     <Loading
                         isLoading={this.state.isLoading}
                         isError={this.state.isError}
@@ -317,8 +318,8 @@ const styles = StyleSheet.create({
     },
     flatListStyle: {
         width: cfn.deviceWidth(),
-        //height: cfn.deviceHeight(),
-        zIndex: 999,
+        //height: cfn.deviceHeight() -  cfn.picHeight(110+80+30+170+80+30+365),
+        zIndex: 1,
         borderTopColor: '#ddd',
         borderTopWidth: 1,
         paddingBottom:cfn.picHeight(20)

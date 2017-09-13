@@ -30,8 +30,14 @@ export default class loadingModal extends Component {
 
     }
 
-    goHome() {
-        this.props.navigation.navigate('Main');
+    goToPage(route) {
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({ routeName: route})
+            ]
+        });
+        this.props.navigation.dispatch(resetAction);
     }
 
     render() {
@@ -51,7 +57,7 @@ export default class loadingModal extends Component {
                 <Image style={styles.img} source={require('../imgs/welcome/welcome_2.png')}/>
                 <Image style={[styles.img,{alignItems:'center',justifyContent:'flex-end',}]} source={require('../imgs/welcome/welcome_3.png')}>
                     <TouchableOpacity
-                        onPress={()=>this.goHome()}
+                        onPress={()=>this.goToPage('Main')}
                         activeOpacity={0.8}
                         style={styles.btn}
                     >

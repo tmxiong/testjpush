@@ -5,8 +5,10 @@ import newsDetailPage from './views/detailPage/newsDetailPage'
 import tipsDetailPage from './views/detailPage/tipsDetailPage'
 import playTipsPage from './views/playTips';
 import moreArticle from './views/moreArticle';
-import welcomePage from './component/welcome';
+import welcomePage from './views/welcomePage';
+import launchPage from './views/launchPage'
 const routers = StackNavigator({
+    launch: {screen: launchPage},
     Main: {screen: MainPage,},
     //Detail: {screen: DetailPagDe,},
     Kaijiang: {screen: KjDetailPage,},

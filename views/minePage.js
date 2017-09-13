@@ -20,7 +20,8 @@ export default class MinePage extends Component {
     constructor(props) {
         super(props);
         this.state={
-            version:''
+            version:'v1.032',
+            cleanCache:'点击清除',
         }
     }
 
@@ -48,13 +49,19 @@ export default class MinePage extends Component {
     }
     setData() {
         this.setState({
-            version:'已经是最新版本',
+            version:'已经是最新版本 v1.032',
         })
     }
 
     setError() {
         this.setState({
             version:'连接错误'
+        })
+    }
+
+    cleanCache() {
+        this.setState({
+            cleanCache: '已清除缓存'
         })
     }
 
@@ -72,7 +79,7 @@ export default class MinePage extends Component {
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={[styles.item_container,{marginTop:cfn.picWidth(30)}]}>
-                    <Text style={styles.item_text}>关于我们</Text>
+                    <Text style={styles.item_text}>阅读历史</Text>
                     <Image
                         style={styles.icon_r}
                         source={require('../imgs/more_r_icon.png')}/>
@@ -80,7 +87,7 @@ export default class MinePage extends Component {
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.item_container}>
-                    <Text style={styles.item_text}>关于我们</Text>
+                    <Text style={styles.item_text}>收藏的资讯</Text>
                     <Image
                         style={styles.icon_r}
                         source={require('../imgs/more_r_icon.png')}/>
@@ -88,18 +95,24 @@ export default class MinePage extends Component {
                 <TouchableOpacity
                     activeOpacity={0.8}
                     style={styles.item_container}>
-                    <Text style={styles.item_text}>关于我们</Text>
+                    <Text style={styles.item_text}>收藏的彩种</Text>
                     <Image
                         style={styles.icon_r}
                         source={require('../imgs/more_r_icon.png')}/>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={()=>this.cleanCache()}
+                    activeOpacity={0.8}
+                    style={[styles.item_container,{marginTop:cfn.picWidth(30)}]}>
+                    <Text style={styles.item_text}>清除缓存</Text>
+                    <Text style={[styles.item_text,{position:'absolute',right:cfn.picWidth(40)}]}>{this.state.cleanCache}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={()=>this.getData()}
                     activeOpacity={0.8}
-                    style={[styles.item_container,{marginTop:cfn.picWidth(30)}]}>
+                    style={styles.item_container}>
                     <Text style={styles.item_text}>当前版本</Text>
-                    <Text style={{marginLeft:cfn.picWidth(20)}}>{this.state.version}</Text>
-                    <Text style={[styles.item_text,{position:'absolute',right:cfn.picWidth(40)}]}>v1.032</Text>
+                    <Text style={[styles.item_text,{position:'absolute',right:cfn.picWidth(40)}]}>{this.state.version}</Text>
                 </TouchableOpacity>
                 <View style={styles.copyright}>
                     <Text style={styles.copyright_text}>{config.copyright[0]}</Text>
@@ -119,7 +132,7 @@ const styles = StyleSheet.create({
         width:cfn.picWidth(130),
         height:cfn.picWidth(130),
         resizeMode:'contain',
-        marginTop:cfn.picHeight(100)
+        marginTop:cfn.picHeight(80)
     },
     item_container: {
         flexDirection: 'row',

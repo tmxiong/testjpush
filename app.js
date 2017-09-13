@@ -16,7 +16,7 @@ import {
     ScrollView
 } from 'react-native';
 import cfn from './tools/commonFun'
-import Welcome from './component/welcome'
+import Welcome from './views/welcomePage'
 export default class loadingModal extends Component {
     static navigationOptions = {header: null};
 

@@ -12,7 +12,7 @@ import {
   View
 } from 'react-native';
 
-import app from './app';
+import router from './router';
 
 
-AppRegistry.registerComponent('testjpush', () => app);
+AppRegistry.registerComponent('testjpush', () => router);

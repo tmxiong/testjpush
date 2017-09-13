@@ -11,7 +11,7 @@ import {TabNavigator} from "react-navigation";
 import HomePage from './homePage';
 import OrderPage from './orderPage';
 import MinePage from './minePage';
-
+import cfn from '../tools/commonFun'
 const navBar = {
     headerTitleStyle: {
         //alignSelf:'center',
@@ -84,7 +84,7 @@ const mainPage = TabNavigator({
         indicatorStyle: {height: 0}, // android 中TabBar下面会显示一条线，高度设为 0 后就不显示线了， 不知道还有没有其它方法隐藏？？？
         style: {
             backgroundColor: '#eee', // TabBar 背景色
-            height:50
+            height:cfn.picHeight(110)
         },
         labelStyle: {
             fontSize: 12, // 文字大小,
@@ -99,8 +99,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     icon:{
-        width:20,
-        height:20
+        width:cfn.picHeight(50),
+        height:cfn.picHeight(50),
+        resizeMode:'contain'
     }
 });
 module.exports = mainPage;

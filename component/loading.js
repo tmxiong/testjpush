@@ -67,6 +67,7 @@ export default class loadingModal extends PureComponent {
                     top: cfn.deviceHeight() / 2,
                     justifyContent: 'center',
                     height:cfn.picHeight(80),
+                    zIndex:2
                 }}>
                 <Text style={{color:'#888',fontSize:14}}>{text}</Text>
             </TouchableOpacity>)
