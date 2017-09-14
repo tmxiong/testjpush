@@ -148,8 +148,8 @@ export default class HomePage extends Component {
                 >
                     <Banner
                         bannerList={[
-                            require('../imgs/banner/banner_01.jpg'),
-                            require('../imgs/banner/banner_03.jpg'),
+                            require('../imgs/banner/banner_01.png'),
+                            require('../imgs/banner/banner_03.png'),
                             require('../imgs/banner/banner_02.jpg'),]}
                     />
                     <Notice/>
