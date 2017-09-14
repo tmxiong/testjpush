@@ -11,7 +11,9 @@ import {
     WebView,
     FlatList,
     Platform,
-    StatusBar
+    StatusBar,
+    ToastAndroid,
+    Share
 } from 'react-native';
 import urls from '../../config/urls';
 import config from '../../config/config'
@@ -19,6 +21,8 @@ import cfn from '../../tools/commonFun'
 import NavBar from '../../component/NavBar';
 import Loading from '../../component/loading'
 import options from '../../imgs/options_icon.png'
+import OptionModal from '../../component/optionModal';
+import Global from '../../global/global';
 export default class tipsDetailPage extends Component {
 
     static navigationOptions = {header: null};
@@ -27,16 +31,25 @@ export default class tipsDetailPage extends Component {
         super(props);
         this.state = {
             isLoading:true,
-            isError:false
+            isError:false,
+            visible:false,
+            isCollected:false
         };
 
         this.id = props.navigation.state.params.id;
-        let statusBarHeight = Platform.OS == 'ios' ? cfn.picHeight(46) : StatusBar.currentHeight;
-        this.navBarHeight = Platform.OS == 'ios' ? cfn.picHeight(160) : cfn.picHeight(200);
-        this.navBarHeight = this.navBarHeight + statusBarHeight;
+        // let statusBarHeight = Platform.OS == 'ios' ? cfn.picHeight(46) : StatusBar.currentHeight;
+        // this.navBarHeight = Platform.OS == 'ios' ? cfn.picHeight(160) : cfn.picHeight(200);
+        // this.navBarHeight = this.navBarHeight + statusBarHeight;
     }
 
-    static defaultProps = {};
+    static defaultProps = {
+
+    };
+
+    componentDidMount() {
+        this.getIsCollected();
+        this.addHistory();
+    }
 
     goBack() {
         this.props.navigation.goBack();
@@ -66,38 +79,75 @@ export default class tipsDetailPage extends Component {
         })
     }
 
-    addCollection() {
-        const {data} = this.props.navigation.state.params;
+    getIsCollected() {
+
+        //const {rowData} = this.props.navigation.state.params;
+        Global.storage.getAllDataForKey('article').then((data) => {
+            if(data.length == 0) return;
+            for (let i in data) {
+                if(data[i].id == this.id){
+                    this.setState({isCollected:true});
+                    break;
+                }
+            }
+        });
+    }
+
+    addHistory() {
+        const {rowData} = this.props.navigation.state.params;
         Global.storage.save({
-            key: 'collection',  // 注意:请不要在key中使用_下划线符号!
-            id: data._id, //获取所有数据时，id 必须写
-            data: data,
+            key: 'history',  // 注意:请不要在key中使用_下划线符号!
+            id: this.id, //获取所有数据时，id 必须写
+            data: rowData,
 
             // 如果不指定过期时间，则会使用defaultExpires参数
             // 如果设为null，则永不过期
             expires: null
         });
-        this.props.dispatch(setCollection(true))
     }
 
-    deleteCollection() {
-        const {data} = this.props.navigation.state.params;
-        Global.storage.remove({
-            key: 'collection',
-            id: data._id
-        });
+    addCollection(type) {
+        const {rowData} = this.props.navigation.state.params;
+        if(type == 'article') {
+            Global.storage.save({
+                key: 'article',  // 注意:请不要在key中使用_下划线符号!
+                id: this.id, //获取所有数据时，id 必须写
+                data: rowData,
 
-        Global.storage.getAllDataForKey('collection').then((data) => {
+                // 如果不指定过期时间，则会使用defaultExpires参数
+                // 如果设为null，则永不过期
+                expires: null
+            });
+
+        } else if(type == 'lottery') {
+
+        }
+
+        this.setState({isCollected:true});
+
+        Global.storage.getAllDataForKey('article').then((data) => {
             console.log(data);
         });
 
-        this.props.dispatch(setCollection(false));
+    }
+
+    deleteCollection() {
+
+        Global.storage.remove({
+            key: 'article',
+            id: this.id
+        });
+        this.setState({isCollected:false});
+        Global.storage.getAllDataForKey('article').then((data) => {
+            //console.log(data);
+        });
+
     }
 
     shareArtical() {
-        const {data} = this.props.navigation.state.params;
+        const {rowData} = this.props.navigation.state.params;
         Share.share({
-            message: data.desc + data.url
+            message: rowData.title + urls.getPlayTipsDetail(this.id)
         })
             .then(this._showResult)
             .catch((error) => {this.setModalVisible(false)})
@@ -116,6 +166,32 @@ export default class tipsDetailPage extends Component {
         }
     }
 
+    setModalVisible(visible) {
+        this.setState({
+            visible:visible
+        })
+    }
+
+    closeModal(type) {
+        this.setModalVisible(false);
+        if(type == 'article') {
+            if(this.state.isCollected) {
+                this.deleteCollection('article');
+            } else {
+                this.addCollection('article');
+            }
+
+
+        } else if (type == 'share') {
+
+            this.shareArtical();
+
+        } else if(type == 'lottery') {
+
+        }
+
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -123,8 +199,13 @@ export default class tipsDetailPage extends Component {
                     leftFn={this.goBack.bind(this)}
                     middleText="文章详情"
                     rightIcon={options}
+                    rightFn={this.setModalVisible.bind(this,!this.state.visible)}
                 />
-
+                <OptionModal
+                    visible={this.state.visible}
+                    closeModal={this.closeModal.bind(this)}
+                    isCollected={this.state.isCollected}
+                />
                 <View style={{height:this.state.isLoading ? 0 : cfn.deviceHeight()}}>
                     <WebView
                         source={{uri: urls.getPlayTipsDetail(this.id)}}

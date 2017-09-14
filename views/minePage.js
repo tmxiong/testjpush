@@ -87,7 +87,7 @@ export default class MinePage extends Component {
                             activeOpacity={0.8}
                             onPress={()=>this.goToDetail('ReadHistory')}
                             style={[styles.item_container, {marginTop: cfn.picWidth(30)}]}>
-                            <Text style={styles.item_text}>阅读历史</Text>
+                            <Text style={styles.item_text}>已阅读攻略</Text>
                             <Image
                                 style={styles.icon_r}
                                 source={require('../imgs/more_r_icon.png')}/>
@@ -96,20 +96,20 @@ export default class MinePage extends Component {
                             activeOpacity={0.8}
                             onPress={()=>this.goToDetail('ArticleCollection')}
                             style={styles.item_container}>
-                            <Text style={styles.item_text}>收藏的文章</Text>
+                            <Text style={styles.item_text}>收藏的攻略</Text>
                             <Image
                                 style={styles.icon_r}
                                 source={require('../imgs/more_r_icon.png')}/>
                         </TouchableOpacity>
-                        <TouchableOpacity
-                            activeOpacity={0.8}
-                            onPress={()=>this.goToDetail('CpCollection')}
-                            style={styles.item_container}>
-                            <Text style={styles.item_text}>收藏的彩种</Text>
-                            <Image
-                                style={styles.icon_r}
-                                source={require('../imgs/more_r_icon.png')}/>
-                        </TouchableOpacity>
+                        {/*<TouchableOpacity*/}
+                            {/*activeOpacity={0.8}*/}
+                            {/*onPress={()=>this.goToDetail('CpCollection')}*/}
+                            {/*style={styles.item_container}>*/}
+                            {/*<Text style={styles.item_text}>收藏的彩种</Text>*/}
+                            {/*<Image*/}
+                                {/*style={styles.icon_r}*/}
+                                {/*source={require('../imgs/more_r_icon.png')}/>*/}
+                        {/*</TouchableOpacity>*/}
                         <TouchableOpacity
                             onPress={()=>this.cleanCache()}
                             activeOpacity={0.8}
@@ -181,6 +181,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         alignItems: 'center',
         justifyContent: 'center',
+        alignSelf:'center',
         bottom: cfn.picHeight(20)
     },
     copyright_text: {

@@ -23,7 +23,8 @@ const url_id = require('../config/urls').getUrlId();
 let {getArticleList} = require('../config/urls');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 import Banner from '../component/Banner';
-import fetchp from '../tools/fetch-polyfill'
+import fetchp from '../tools/fetch-polyfill';
+import Notice from '../component/Notice';
 export default class HomePage extends Component {
     constructor(props) {
         super(props);
@@ -151,6 +152,7 @@ export default class HomePage extends Component {
                             require('../imgs/banner/banner_03.jpg'),
                             require('../imgs/banner/banner_02.jpg'),]}
                     />
+                    <Notice/>
                     <View
                         style={{
                             width: cfn.deviceWidth(), alignItems: 'flex-end',

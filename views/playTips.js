@@ -86,6 +86,7 @@ export default class playTips extends Component {
                 onPress={()=>this.goToDetail('tipsDetail', {
                         id: item.id,
                         title: item.title,
+                        rowData: item,
                     }
                 )}
                 style={styles.item_container}>
@@ -94,7 +95,7 @@ export default class playTips extends Component {
                     <Text
                         style={styles.item_title}>{item.title}</Text>
                     <Text style={styles.item_source}>{config.sourceName}</Text>
-                    <Text style={styles.item_time}>{item.mtime}</Text>
+                    <Text style={styles.item_time}>{new Date(item.publishTime).toLocaleString().split(' ')[0]}</Text>
                 </View>
                 <Image
                     style={styles.item_img}

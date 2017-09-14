@@ -13,7 +13,8 @@ import {
     View,
     Image,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    AsyncStorage
 } from 'react-native';
 import {NavigationActions} from 'react-navigation'
 import cfn from '../tools/commonFun'
@@ -34,9 +35,9 @@ export default class loadingModal extends Component {
     componentDidMount() {
         this.initStorage();
 
-        setTimeout(()=>{
+        //setTimeout(()=>{
             this.goToPage('Welcome');
-        },2000)
+        //},2000)
     }
 
     initStorage() {
