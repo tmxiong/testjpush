@@ -18,6 +18,7 @@ import config from '../../config/config'
 import cfn from '../../tools/commonFun'
 import NavBar from '../../component/NavBar';
 import Loading from '../../component/loading'
+import options from '../../imgs/options_icon.png'
 export default class tipsDetailPage extends Component {
 
     static navigationOptions = {header: null};
@@ -64,12 +65,64 @@ export default class tipsDetailPage extends Component {
             isError:true
         })
     }
+
+    addCollection() {
+        const {data} = this.props.navigation.state.params;
+        Global.storage.save({
+            key: 'collection',  // 注意:请不要在key中使用_下划线符号!
+            id: data._id, //获取所有数据时，id 必须写
+            data: data,
+
+            // 如果不指定过期时间，则会使用defaultExpires参数
+            // 如果设为null，则永不过期
+            expires: null
+        });
+        this.props.dispatch(setCollection(true))
+    }
+
+    deleteCollection() {
+        const {data} = this.props.navigation.state.params;
+        Global.storage.remove({
+            key: 'collection',
+            id: data._id
+        });
+
+        Global.storage.getAllDataForKey('collection').then((data) => {
+            console.log(data);
+        });
+
+        this.props.dispatch(setCollection(false));
+    }
+
+    shareArtical() {
+        const {data} = this.props.navigation.state.params;
+        Share.share({
+            message: data.desc + data.url
+        })
+            .then(this._showResult)
+            .catch((error) => {this.setModalVisible(false)})
+    }
+
+    _showResult(result) {
+        this.setModalVisible(false);
+        if (result.action === Share.sharedAction) {
+            if (result.activityType) {
+                //this.setState({result: 'shared with an activityType: ' + result.activityType});
+            } else {
+                ToastAndroid.show('分享成功！',ToastAndroid.SHORT)
+            }
+        } else if (result.action === Share.dismissedAction) {
+
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <NavBar
                     leftFn={this.goBack.bind(this)}
                     middleText="文章详情"
+                    rightIcon={options}
                 />
 
                 <View style={{height:this.state.isLoading ? 0 : cfn.deviceHeight()}}>

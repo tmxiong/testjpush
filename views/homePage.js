@@ -18,10 +18,8 @@ import {
 } from 'react-native';
 import cfn from '../tools/commonFun';
 import Loading from '../component/loading'
-import NavBar from '../component/NavBar';
 import config from '../config/config'
 const url_id = require('../config/urls').getUrlId();
-import Welcome from './welcomePage';
 let {getArticleList} = require('../config/urls');
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 import Banner from '../component/Banner';
@@ -135,12 +133,6 @@ export default class HomePage extends Component {
         this.getData(false, 0, 10);
     }
 
-    _onEndReached() {
-        this.nowPage++;
-        this.getData(false, this.nowPage * 20, this.nowPage * 20 + 20);
-        //alert(this.nowPage)
-    }
-
     render() {
         return (
             <View style={{height:cfn.deviceHeight()}}>
@@ -161,7 +153,7 @@ export default class HomePage extends Component {
                     />
                     <View
                         style={{
-                            width: cfn.deviceWidth(), alignItems: 'flex-end', marginTop: cfn.picHeight(30),
+                            width: cfn.deviceWidth(), alignItems: 'flex-end',
                             height: cfn.picHeight(80), backgroundColor: '#fff', justifyContent: 'center'
                         }}
                     >

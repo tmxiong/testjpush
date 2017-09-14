@@ -32,6 +32,8 @@ export default class loadingModal extends Component {
     }
 
     componentDidMount() {
+        this.initStorage();
+
         setTimeout(()=>{
             this.goToPage('Welcome');
         },2000)

@@ -7,6 +7,9 @@ import playTipsPage from './views/playTips';
 import moreArticle from './views/moreArticle';
 import welcomePage from './views/welcomePage';
 import launchPage from './views/launchPage'
+import readHistoryPage from './views/detailPage/readHistoryPage'
+import cpCollectionPage from './views/detailPage/cpCollectionPage'
+import articleCollectionPage from './views/detailPage/articleCollectionPage'
 const routers = StackNavigator({
     launch: {screen: launchPage},
     Main: {screen: MainPage,},
@@ -18,5 +21,8 @@ const routers = StackNavigator({
     MoreArticle: {screen: moreArticle},
     Welcome: {screen: welcomePage},
 
+    ReadHistory: {screen: readHistoryPage},
+    CpCollection: {screen: cpCollectionPage},
+    ArticleCollection: {screen: articleCollectionPage},
 });
 module.exports = routers;
